@@ -64,3 +64,31 @@ def count_satellites():
 
     conn.close()
     return total_count, last_24_hours_count
+
+
+def custom_query():
+    """
+    Allow the user to execute a custom SQL query on the database.
+
+    This function prompts the user for an SQL query, executes it against the satellite_data.db
+    database, and displays the results. Error handling is included to manage any SQL errors.
+    """
+    conn = sqlite3.connect('satellite_data.db')
+    cursor = conn.cursor()
+
+    query = input("Enter your SQL query: ")
+
+    try:
+        cursor.execute(query)
+        results = cursor.fetchall()
+
+        if results:
+            for row in results:
+                print(row)  # Print each result row
+        else:
+            print("No results found.")
+    except sqlite3.Error as e:
+        print(f"An error occurred: {e}")  # Print error message
+
+    conn.close()
+
