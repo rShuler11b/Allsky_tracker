@@ -1,5 +1,5 @@
 from db_utils import count_meteors, count_meteors_last_24, count_satellites
-from custom_query import custom_query
+from db_utils import custom_query
 
 def display_menu():
     while True:
