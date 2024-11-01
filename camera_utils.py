@@ -1,11 +1,14 @@
+import subprocess
+from PIL import Image
 import cv2
+import numpy as np
 
-def configure_camera():
-    camera = cv2.VideoCapture(0)
-    camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
-    camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
-    camera.set(cv2.CAP_PROP_FPS, 60)
-    return camera
+def capture_frame():
+    # Capture an image using libcamera-still and load it into OpenCV
+    subprocess.run(["libcamera-still", "-o", "/tmp/libcamera_frame.jpg", "--width", "1920", "--height", "1080", "--timeout", "1", "-n"])
+    pil_image = Image.open("/tmp/libcamera_frame.jpg")
+    frame = cv2.cvtColor(np.array(pil_image), cv2.COLOR_RGB2BGR)  # Convert to OpenCV format
+    return frame
 
 def process_frame(frame, detect_meteors_func, add_satellite_data_func):
     satellite_data_to_add = []
