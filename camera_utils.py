@@ -2,13 +2,32 @@ import subprocess
 from PIL import Image
 import cv2
 import numpy as np
+import time
 
 def capture_frame():
-    # Capture an image using libcamera-still and load it into OpenCV
-    subprocess.run(["libcamera-still", "-o", "/tmp/libcamera_frame.jpg", "--width", "1920", "--height", "1080", "--timeout", "1", "-n"])
+    # Capture an image using libcamera-still with a 3.5-second exposure
+    subprocess.run([
+        "libcamera-still",
+        "-o", "/tmp/libcamera_frame.jpg",
+        "--width", "1920",
+        "--height", "1080",
+        "--timeout", "3500",  # Timeout to allow for a 3.5-second exposure
+        "--shutter", "3500000",  # 3.5 seconds in microseconds
+        "-n"
+    ])
     pil_image = Image.open("/tmp/libcamera_frame.jpg")
     frame = cv2.cvtColor(np.array(pil_image), cv2.COLOR_RGB2BGR)  # Convert to OpenCV format
     return frame
+
+
+def continuous_capture():
+    while True:
+        frame = capture_frame()
+        # Here you could process or save the frame as needed
+        print("Captured frame at", time.strftime("%Y-%m-%d %H:%M:%S"))
+
+        # Wait 3.5 seconds before capturing the next frame
+        time.sleep(3.5)
 
 def process_frame(frame, detect_meteors_func, add_satellite_data_func):
     satellite_data_to_add = []
