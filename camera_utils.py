@@ -17,6 +17,10 @@ def capture_frame():
     ])
     pil_image = Image.open("/tmp/libcamera_frame.jpg")
     frame = cv2.cvtColor(np.array(pil_image), cv2.COLOR_RGB2BGR)  # Convert to OpenCV format
+
+    # display imave via openCV
+    cv2.imwrite("/tmp/display_image.jpg", frame)
+    
     return frame
 
 
